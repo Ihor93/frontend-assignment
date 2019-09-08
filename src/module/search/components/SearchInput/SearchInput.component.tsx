@@ -1,7 +1,7 @@
 import React, {ChangeEvent} from "react";
-import Clear from "../../assets/svg/clear"
-import Search from "../../assets/svg/search"
-import LoadingIcon from "../../assets/svg/loading-indicator"
+import Clear from "../../../../assets/svg/clear"
+import Search from "../../../../assets/svg/search"
+import LoadingIcon from "../../../../assets/svg/loading-indicator"
 import "./styles.css"
 
 interface Props {

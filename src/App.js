@@ -1,9 +1,9 @@
 import React from "react";
-import {SearchContainer} from './components/SearchContainer/SearchContainer.component';
+import {SearchModule} from './module/search/SearchModule.component';
 
 const App = () => (
   <div className="app-container">
-    <SearchContainer/>
+    <SearchModule/>
   </div>
 );
 

@@ -1,0 +1,1 @@
+export const searchEntities = ["ARTIST", "ARTWORK", "ARTICLE", "CITY", "COLLECTION", "FAIR", "FEATURE", "GALLERY", "GENE", "INSTITUTION", "PROFILE", "SALE", "SHOW", "TAG"];

@@ -1,37 +1,28 @@
 import React from "react";
-import {SearchInput} from "../SearchInput/SearchInput.component";
-import {SearchCategories} from "../SearchCategory/SearchCategories.component";
-import {SearchResult} from "../SearchResult/SearchResult.component";
-import {gql} from "apollo-boost";
 import {Query, QueryResult} from "react-apollo";
-import "./styles.css"
+import {SearchInput} from "./components/SearchInput/SearchInput.component";
+import {SearchEntities} from "./components/SearchEntities/SearchEntities.component";
+import {SearchResult} from "./components/SearchResult/SearchResult.component";
 import {DelayedCall} from "../../utilities/delayed-call";
-
-const GET_SEARCH_RESULTS = gql`
-  query getSearchResults($query : String!) {
-    search(query: $query, first: 2, entities: [CITY, ARTWORK]) {
-      edges {
-        node {
-          displayLabel
-        }
-      }
-    }
-  }
-`;
+import {GET_SEARCH_RESULTS} from "./search-result-query";
+import {searchEntities} from "./models";
+import "./styles.css"
 
 interface Props {}
 interface State {
-    query : string
+    query : string,
+    activeEntities : string[]
 }
 
-export class SearchContainer extends React.Component<Props,State> {
+export class SearchModule extends React.Component<Props,State> {
     private inputValue : string;
     private delayedCall: DelayedCall;
 
     constructor(props) {
         super(props);
         this.state = {
-            query: ""
+            query: "",
+            activeEntities : [searchEntities[0]]
         };
         this.delayedCall = new DelayedCall(this.makeDelayedCall, 500);
     }
@@ -51,6 +42,10 @@ export class SearchContainer extends React.Component<Props,State> {
         this.delayedCall.run();
     };
 
+    toggleEntity = (entity : string) => {
+        console.log(entity)
+    };
+
     private renderQueryResult = ({loading, error, data}: QueryResult) => {
         console.log(data);
         return (
@@ -59,7 +54,7 @@ export class SearchContainer extends React.Component<Props,State> {
                 {
                     !(loading && error) &&
                     <>
-                        <SearchCategories/>
+                        <SearchEntities activeEntities={this.state.activeEntities} selectEntity={this.toggleEntity}/>
                         <SearchResult/>
                     </>
                 }
@@ -70,10 +65,12 @@ export class SearchContainer extends React.Component<Props,State> {
     render() {
         return (
             <Query
+                skip={!this.state.query}
                 children={this.renderQueryResult}
                 query={GET_SEARCH_RESULTS}
                 variables={{
-                    query: this.state.query
+                    query: this.state.query,
+                    entities : this.state.activeEntities
                 }}
             />
         );
