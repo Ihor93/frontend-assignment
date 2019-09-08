@@ -2,7 +2,7 @@ import React from "react";
 import {Query, QueryResult} from "react-apollo";
 import {SearchInput} from "./components/SearchInput/SearchInput.component";
 import {SearchEntities} from "./components/SearchEntities/SearchEntities.component";
-import {SearchResult} from "./components/SearchResult/SearchResult.component";
+import {SearchResult, SearchResultItem} from "./components/SearchResult/SearchResult.component";
 import {DelayedCall} from "../../utilities/delayed-call";
 import {GET_SEARCH_RESULTS} from "./search-result-query";
 import {searchEntities} from "./models";
@@ -51,17 +51,22 @@ export class SearchModule extends React.Component<Props,State> {
     };
 
     private renderQueryResult = ({loading, error, data}: QueryResult) => {
-        console.log(data);
+       let withData;
+
+        if (!(loading && error) && data && data.search) {
+            const searchResult = data.search.edges.map(edge =>  new SearchResultItem(edge.node));
+            withData = (
+                <>
+                    <SearchEntities activeEntity={this.state.activeEntity} selectEntity={this.selectEntity}/>
+                    <SearchResult searchResult={searchResult} activeEntity={this.state.activeEntity}/>
+                </>
+            )
+        }
+
         return (
             <div className="search-container">
                 <SearchInput onChange={this.onInputChange} loading={loading}/>
-                {
-                    !(loading && error) &&
-                    <>
-                        <SearchEntities activeEntity={this.state.activeEntity} selectEntity={this.selectEntity}/>
-                        <SearchResult/>
-                    </>
-                }
+                { withData }
             </div>
         );
     };

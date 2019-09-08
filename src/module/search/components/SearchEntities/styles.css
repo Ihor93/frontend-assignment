@@ -2,6 +2,7 @@
 	height: 44px;
 	overflow-y: hidden;
 	position: relative;
+	margin-bottom: 30px;
 }
 
 .search-entities-container:after {
