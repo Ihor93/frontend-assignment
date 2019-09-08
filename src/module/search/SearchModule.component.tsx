@@ -11,7 +11,7 @@ import "./styles.css"
 interface Props {}
 interface State {
     query : string,
-    activeEntities : string[]
+    activeEntity : string
 }
 
 export class SearchModule extends React.Component<Props,State> {
@@ -22,7 +22,7 @@ export class SearchModule extends React.Component<Props,State> {
         super(props);
         this.state = {
             query: "",
-            activeEntities : [searchEntities[0]]
+            activeEntity : searchEntities[0]
         };
         this.delayedCall = new DelayedCall(this.makeDelayedCall, 500);
     }
@@ -42,8 +42,12 @@ export class SearchModule extends React.Component<Props,State> {
         this.delayedCall.run();
     };
 
-    toggleEntity = (entity : string) => {
-        console.log(entity)
+    selectEntity = (entity : string) => {
+        if (entity !== this.state.activeEntity) {
+            this.setState({
+                activeEntity : entity
+            })
+        }
     };
 
     private renderQueryResult = ({loading, error, data}: QueryResult) => {
@@ -54,7 +58,7 @@ export class SearchModule extends React.Component<Props,State> {
                 {
                     !(loading && error) &&
                     <>
-                        <SearchEntities activeEntities={this.state.activeEntities} selectEntity={this.toggleEntity}/>
+                        <SearchEntities activeEntity={this.state.activeEntity} selectEntity={this.selectEntity}/>
                         <SearchResult/>
                     </>
                 }
@@ -70,7 +74,7 @@ export class SearchModule extends React.Component<Props,State> {
                 query={GET_SEARCH_RESULTS}
                 variables={{
                     query: this.state.query,
-                    entities : this.state.activeEntities
+                    entities : [this.state.activeEntity]
                 }}
             />
         );

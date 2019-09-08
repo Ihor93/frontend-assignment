@@ -11,6 +11,7 @@ interface Props {
 
 interface State {
     inputHasValue : boolean
+    unTouched : boolean
 }
 
 export class SearchInput extends React.Component<Props, State> {
@@ -20,7 +21,8 @@ export class SearchInput extends React.Component<Props, State> {
 
         this.inputRef = React.createRef();
         this.state = {
-            inputHasValue : false
+            inputHasValue : false,
+            unTouched : true
         }
     }
 
@@ -38,13 +40,26 @@ export class SearchInput extends React.Component<Props, State> {
         })
     };
 
+    onFocus = () => {
+        this.setState({
+            unTouched : false
+        })
+    };
+
     render() {
         const { loading } = this.props;
-        const { inputHasValue } = this.state;
+        const { inputHasValue, unTouched } = this.state;
+        const classNames = unTouched ? "search-input-container un-touched" : "search-input-container";
         return (
-            <div className="search-input-container">
+            <div className={classNames}>
                 <Search/>
-                <input ref={this.inputRef} type="text" className="search-input" onChange={this.onChangeValue}/>
+                <input
+                    placeholder="Search by artist, gallery, style, theme, tag, etc."
+                    onFocus={this.onFocus}
+                    ref={this.inputRef}
+                    type="text"
+                    className="search-input"
+                    onChange={this.onChangeValue}/>
                 { loading && <LoadingIcon/> }
                 { !loading && inputHasValue && <Clear onClick={this.onClear}/> }
             </div>
