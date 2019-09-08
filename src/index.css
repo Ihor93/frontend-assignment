@@ -89,3 +89,6 @@ q:before {
   content: "";
   content: none;
 }
+
+@import "./assets/styles/keyframes.css";
+@import "./assets/styles/icons.css";
